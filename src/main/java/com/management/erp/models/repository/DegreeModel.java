@@ -9,7 +9,7 @@ import javax.persistence.Table;
 public class DegreeModel {
 
     @Id
-    private int degree;
+    private long id;
 
     private String name;
     private int duration;
@@ -21,12 +21,12 @@ public class DegreeModel {
 
     public DegreeModel() {}
 
-    public int getDegree() {
-        return degree;
+    public long getId() {
+        return id;
     }
 
-    public void setDegree(int degree) {
-        this.degree = degree;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
