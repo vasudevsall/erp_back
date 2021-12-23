@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${JDBC_DATABASE_URL}
-    username: ${JDBC_DATABASE_USERNAME}
-    password: ${JDBC_DATABASE_PASSWORD}
+    url: ${CLEARDB_DATABASE_URL}
+    username: ${CLEARDB_DATABASE_USER}
+    password: ${CLEARDB_DATABASE_PASSWORD}
 
   jpa:
     properties:
