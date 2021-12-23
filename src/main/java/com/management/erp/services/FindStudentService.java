@@ -33,7 +33,6 @@ public class FindStudentService {
     public StudentModel findStudentModelByUserModel(UserModel userModel) {
         Optional<StudentModel> studentModelOptional =
                 studentRepository.findByUserId(userModel);
-        System.out.println(studentRepository.findByUserId(userModel));
         if(studentModelOptional.isPresent())
             return studentModelOptional.get();
 
@@ -44,7 +43,6 @@ public class FindStudentService {
 
     public StudentModel findStudentModelByEmail(String email) {
         UserModel userModel = findUserService.findUserByEmail(email);
-        System.out.println(findStudentModelByUserModel(userModel));
         return findStudentModelByUserModel(userModel);
     }
 }

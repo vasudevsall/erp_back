@@ -11,8 +11,10 @@ public class CourseModel {
     @Id
     private String id;
 
+    private String name;
+
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "departmentId", referencedColumnName = "id")
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private DepartmentModel departmentId;
 
@@ -28,8 +30,9 @@ public class CourseModel {
     private int students;
     private char type;
 
-    public CourseModel(String id, DepartmentModel departmentId, FacultyModel faculty, int credits, double theory, double practical, double tutorial, int students, char type) {
+    public CourseModel(String id, String name, DepartmentModel departmentId, FacultyModel faculty, int credits, double theory, double practical, double tutorial, int students, char type) {
         this.id = id;
+        this.name = name;
         this.departmentId = departmentId;
         this.faculty = faculty;
         this.credits = credits;
@@ -40,7 +43,7 @@ public class CourseModel {
         this.type = type;
     }
 
-    public CourseModel() {}
+    public CourseModel(){}
 
     public String getId() {
         return id;
@@ -48,6 +51,14 @@ public class CourseModel {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public DepartmentModel getDepartmentId() {

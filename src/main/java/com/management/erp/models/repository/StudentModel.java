@@ -14,12 +14,12 @@ public class StudentModel {
     private String id;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "userId", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private UserModel userId;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "departmentId", referencedColumnName = "id")
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private DepartmentModel departmentId;
 

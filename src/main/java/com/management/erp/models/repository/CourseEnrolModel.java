@@ -14,12 +14,12 @@ public class CourseEnrolModel {
     private int id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courseId", referencedColumnName = "id")
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private CourseModel courseId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "degreeId", referencedColumnName = "id")
+    @JoinColumn(name = "degree_id", referencedColumnName = "id")
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private DegreeModel degreeId;
 
