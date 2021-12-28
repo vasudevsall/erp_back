@@ -29,6 +29,7 @@ public class UserModel {
     private char gender;
     private LocalDate dob;
     private String phone;
+    private String profile;
 
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private String roles;
@@ -36,7 +37,7 @@ public class UserModel {
     @JsonIgnore
     private boolean active;
 
-    public UserModel(String email, String password, String firstName, String lastName, char gender, LocalDate dob, String phone, String roles, boolean active) {
+    public UserModel(String email, String password, String firstName, String lastName, char gender, LocalDate dob, String phone, String profile, String roles) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
@@ -44,8 +45,8 @@ public class UserModel {
         this.gender = gender;
         this.dob = dob;
         this.phone = phone;
+        this.profile = profile;
         this.roles = roles;
-        this.active = active;
     }
 
     public UserModel() {}
@@ -128,5 +129,13 @@ public class UserModel {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }
