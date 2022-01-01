@@ -4,6 +4,7 @@ spring:
     url: ${CLEARDB_DATABASE_URL}
     username: ${CLEARDB_DATABASE_USER}
     password: ${CLEARDB_DATABASE_PASSWORD}
+    hikari.maxLifeTime : 600000
 
   jpa:
     properties:
