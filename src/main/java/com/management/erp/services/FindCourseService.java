@@ -1,8 +1,8 @@
 package com.management.erp.services;
 
-import com.management.erp.models.repository.CourseAnnouncementModel;
-import com.management.erp.models.repository.CourseModel;
+import com.management.erp.models.repository.*;
 import com.management.erp.repositories.CourseAnnouncementRepository;
+import com.management.erp.repositories.CourseEnrolRepository;
 import com.management.erp.repositories.CourseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +19,8 @@ public class FindCourseService {
     private CourseRepository courseRepository;
     @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
+    @Autowired
+    private CourseEnrolRepository courseEnrolRepository;
 
     public CourseModel findCourse(String id) {
         Optional<CourseModel> courseModelOptional = courseRepository.findById(id);
@@ -37,5 +39,12 @@ public class FindCourseService {
 
     public List<CourseAnnouncementModel> getCourseAnnouncements(CourseModel courseModel) {
         return courseAnnouncementRepository.findAllByCourseId(courseModel);
+    }
+
+    // Find all courses for students
+    public List<CourseEnrolModel> getAllStudentCourses(StudentModel studentModel) {
+        return courseEnrolRepository.findAllByDegreeIdAndSemester(
+                studentModel.getDegree(), studentModel.getSemester()
+        );
     }
 }

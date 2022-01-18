@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface EnrolmentRepository extends JpaRepository<EnrolmentModel, Long> {
     List<EnrolmentModel> findAllByStudent(StudentModel student);
+    List<EnrolmentModel> findAllByEnrolNo(long enrolNo);
 }

@@ -1,14 +1,9 @@
 package com.management.erp.controllers;
 
-import com.management.erp.models.repository.CourseAnnouncementModel;
-import com.management.erp.models.repository.CourseModel;
-import com.management.erp.models.repository.FilesModel;
-import com.management.erp.models.repository.LinksModel;
+import com.management.erp.models.repository.*;
 import com.management.erp.models.response.CourseAnnouncementResponseModel;
 import com.management.erp.models.response.CourseResponseModel;
-import com.management.erp.repositories.CourseAnnouncementRepository;
-import com.management.erp.repositories.FilesRepository;
-import com.management.erp.repositories.LinksRepository;
+import com.management.erp.repositories.*;
 import com.management.erp.services.FindCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,6 +27,12 @@ public class CourseController {
     private FilesRepository filesRepository;
     @Autowired
     private LinksRepository linksRepository;
+    @Autowired
+    private CourseEnrolRepository courseEnrolRepository;
+    @Autowired
+    private EnrolmentRepository enrolmentRepository;
+    @Autowired
+    private StudentRepository studentRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody CourseResponseModel getCourseAnnouncements(
@@ -54,5 +55,25 @@ public class CourseController {
         }
 
         return new CourseResponseModel(courseModel, announcementResponseModels);
+    }
+
+    @RequestMapping(value = "/{id}/students", method = RequestMethod.GET)
+    public @ResponseBody List<StudentModel> getCourseStudents(@PathVariable String id) {
+        CourseModel courseModel = findCourseService.findCourse(id);
+        List<CourseEnrolModel> enrolments = courseEnrolRepository.findAllByCourseId(courseModel);
+        List<StudentModel> registeredStudents = new ArrayList<>();
+        for(CourseEnrolModel courseEnrolModel: enrolments) {
+            if(courseEnrolModel.getSemester() == 0) {
+                List<EnrolmentModel> enrolmentModels =
+                        enrolmentRepository.findAllByEnrolNo(courseEnrolModel.getEnrolment());
+                for(EnrolmentModel enrols: enrolmentModels)
+                    registeredStudents.add(enrols.getStudent());
+            } else {
+                registeredStudents.addAll(studentRepository.findAllBySemesterAndDegree(
+                        courseEnrolModel.getSemester(), courseEnrolModel.getDegreeId()
+                ));
+            }
+        }
+        return registeredStudents;
     }
 }

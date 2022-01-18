@@ -4,6 +4,7 @@ import com.management.erp.models.repository.CourseEnrolModel;
 import com.management.erp.models.repository.StudentModel;
 import com.management.erp.repositories.CourseEnrolRepository;
 import com.management.erp.repositories.StudentRepository;
+import com.management.erp.services.FindCourseService;
 import com.management.erp.services.FindStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +27,8 @@ public class StudentDetailsController {
 
     @Autowired
     private FindStudentService findStudentService;
+    @Autowired
+    private FindCourseService findCourseService;
 
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     private @ResponseBody StudentModel getDetails(
@@ -39,8 +42,6 @@ public class StudentDetailsController {
             Principal principal, HttpServletResponse httpServletResponse
     ) {
       StudentModel studentModel = findStudentService.findStudentModelByEmail(principal.getName());
-      return courseEnrolRepository.findAllByDegreeIdAndSemester(
-              studentModel.getDegree(), studentModel.getSemester()
-      );
+      return findCourseService.getAllStudentCourses(studentModel);
     };
 }
