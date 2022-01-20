@@ -4,6 +4,7 @@ import com.management.erp.models.repository.*;
 import com.management.erp.models.response.CourseAnnouncementResponseModel;
 import com.management.erp.models.response.CourseResponseModel;
 import com.management.erp.repositories.*;
+import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,17 +25,14 @@ public class CourseController {
     @Autowired
     private FindCourseService findCourseService;
     @Autowired
+    private CourseStudentService courseStudentService;
+
+    @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     private FilesRepository filesRepository;
     @Autowired
     private LinksRepository linksRepository;
-    @Autowired
-    private CourseEnrolRepository courseEnrolRepository;
-    @Autowired
-    private EnrolmentRepository enrolmentRepository;
-    @Autowired
-    private StudentRepository studentRepository;
     @Autowired
     private AttendanceRepository attendanceRepository;
     @Autowired
@@ -66,21 +64,7 @@ public class CourseController {
     @RequestMapping(value = "/{id}/students", method = RequestMethod.GET)
     public @ResponseBody List<StudentModel> getCourseStudents(@PathVariable String id) {
         CourseModel courseModel = findCourseService.findCourse(id);
-        List<CourseEnrolModel> enrolments = courseEnrolRepository.findAllByCourseId(courseModel);
-        List<StudentModel> registeredStudents = new ArrayList<>();
-        for(CourseEnrolModel courseEnrolModel: enrolments) {
-            if(courseEnrolModel.getSemester() == 0) {
-                List<EnrolmentModel> enrolmentModels =
-                        enrolmentRepository.findAllByEnrolNo(courseEnrolModel.getEnrolment());
-                for(EnrolmentModel enrols: enrolmentModels)
-                    registeredStudents.add(enrols.getStudent());
-            } else {
-                registeredStudents.addAll(studentRepository.findAllBySemesterAndDegree(
-                        courseEnrolModel.getSemester(), courseEnrolModel.getDegreeId()
-                ));
-            }
-        }
-        return registeredStudents;
+        return courseStudentService.getAllRegisteredStudents(courseModel);
     }
 
     @RequestMapping(value = "/{id}/sessions", method = RequestMethod.GET)

@@ -7,6 +7,7 @@ import com.management.erp.models.repository.TimeTableModel;
 import com.management.erp.models.response.AttendanceResponse;
 import com.management.erp.repositories.AttendanceRepository;
 import com.management.erp.repositories.TimeTableRepository;
+import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
 import com.management.erp.services.FindStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class FacultyAttendanceController {
     private FindStudentService findStudentService;
     @Autowired
     private FindCourseService findCourseService;
+    @Autowired
+    private CourseStudentService courseStudentService;
+
     @Autowired
     private AttendanceRepository attendanceRepository;
     @Autowired
@@ -104,6 +108,77 @@ public class FacultyAttendanceController {
         }
 
         return attendances;
+    }
+
+    // Get list of all students and their attendances in a course
+    @RequestMapping(value = "/{id}/attendance/student", method = RequestMethod.GET)
+    public @ResponseBody List<StudentListResponse> getStudentList(
+        @PathVariable String id
+    ) {
+        CourseModel course = findCourseService.findCourse(id);
+        List<StudentModel> students = courseStudentService.getAllRegisteredStudents(course);
+
+        List<TimeTableModel> schedules = timeTableRepository.findAllByCourseModel(course);
+        List<StudentListResponse> studentAttendances = new ArrayList<>();
+
+        for(StudentModel student: students) {
+            int present = 0;
+            int absent = 0;
+
+            for(TimeTableModel schedule: schedules) {
+                present += attendanceRepository.findAllByStudentModelAndTimetableAndPresent(
+                    student, schedule, true
+                ).size();
+                absent += attendanceRepository.findAllByStudentModelAndTimetableAndPresent(
+                    student, schedule, false
+                ).size();
+            }
+
+            studentAttendances.add(new StudentListResponse(
+                student, present, absent
+            ));
+        }
+
+        return studentAttendances;
+    }
+
+    // Helper class
+    private class StudentListResponse {
+        StudentModel studentModel;
+        int present;
+        int absent;
+
+        public StudentListResponse(StudentModel studentModel, int present, int absent) {
+            this.studentModel = studentModel;
+            this.present = present;
+            this.absent = absent;
+        }
+
+        public StudentListResponse() {}
+
+        public StudentModel getStudentModel() {
+            return studentModel;
+        }
+
+        public void setStudentModel(StudentModel studentModel) {
+            this.studentModel = studentModel;
+        }
+
+        public int getPresent() {
+            return present;
+        }
+
+        public void setPresent(int present) {
+            this.present = present;
+        }
+
+        public int getAbsent() {
+            return absent;
+        }
+
+        public void setAbsent(int absent) {
+            this.absent = absent;
+        }
     }
 
     // Helper method to get schedule
