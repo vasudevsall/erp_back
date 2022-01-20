@@ -4,6 +4,7 @@ import com.management.erp.models.repository.AttendanceModel;
 import com.management.erp.models.repository.StudentModel;
 import com.management.erp.models.repository.TimeTableModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -20,4 +21,8 @@ public interface AttendanceRepository extends JpaRepository<AttendanceModel, Lon
             StudentModel studentModel, LocalDate localDate, TimeTableModel timeTableModel
     );
     List<AttendanceModel> findAllByDateAndTimetable(LocalDate date, TimeTableModel timeTableModel);
+
+    @Query("SELECT " +
+            "distinct date FROM AttendanceModel where timetable = ?1")
+    List<Object[]> getSessionListByTimeTable(TimeTableModel timeTableModel);
 }

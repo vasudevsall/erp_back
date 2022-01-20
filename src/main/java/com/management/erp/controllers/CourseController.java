@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping(value = "/course")
@@ -33,6 +35,10 @@ public class CourseController {
     private EnrolmentRepository enrolmentRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private AttendanceRepository attendanceRepository;
+    @Autowired
+    private TimeTableRepository timeTableRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody CourseResponseModel getCourseAnnouncements(
@@ -75,5 +81,29 @@ public class CourseController {
             }
         }
         return registeredStudents;
+    }
+
+    @RequestMapping(value = "/{id}/sessions", method = RequestMethod.GET)
+    public @ResponseBody Map<String, List<String>> getSessionList(
+        @PathVariable String id
+    ) {
+        CourseModel course = findCourseService.findCourse(id);
+        String[] courseTypes = new String[]{"Lecture", "Tutorial", "Practical"};
+
+        Map<String, List<String>> sessionMap = new HashMap<>();
+
+        for(String type: courseTypes) {
+            List<String> sessionList = new ArrayList<>();
+            List<TimeTableModel> timeTables = timeTableRepository.findAllByCourseModelAndType(course, type.charAt(0));
+            for(TimeTableModel schedule: timeTables) {
+                List<Object[]> sessions = attendanceRepository.getSessionListByTimeTable(schedule);
+                for(Object[] session: sessions)
+                    sessionList.add(session[0].toString());
+            }
+
+            sessionMap.put(type, sessionList);
+        }
+
+        return sessionMap;
     }
 }

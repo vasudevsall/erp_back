@@ -29,8 +29,9 @@ public class CourseModel {
     private double tutorial;
     private int students;
     private char type;
+    private String syllabus;
 
-    public CourseModel(String id, String name, DepartmentModel departmentId, FacultyModel faculty, int credits, double theory, double practical, double tutorial, int students, char type) {
+    public CourseModel(String id, String name, DepartmentModel departmentId, FacultyModel faculty, int credits, double theory, double practical, double tutorial, int students, char type, String syllabus) {
         this.id = id;
         this.name = name;
         this.departmentId = departmentId;
@@ -41,6 +42,7 @@ public class CourseModel {
         this.tutorial = tutorial;
         this.students = students;
         this.type = type;
+        this.syllabus = syllabus;
     }
 
     public CourseModel(){}
@@ -123,5 +125,13 @@ public class CourseModel {
 
     public void setType(char type) {
         this.type = type;
+    }
+
+    public String getSyllabus() {
+        return syllabus;
+    }
+
+    public void setSyllabus(String syllabus) {
+        this.syllabus = syllabus;
     }
 }
