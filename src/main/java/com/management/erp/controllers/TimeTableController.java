@@ -64,6 +64,7 @@ public class TimeTableController {
         for(CourseModel course: courses) {
             upcoming.addAll(timeTableRepository.findAllByCourseModelAndDay(course, day));
         }
+        upcoming.sort(new TimeTableComparator());
         return upcoming;
     }
 

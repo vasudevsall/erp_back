@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/course")
@@ -57,6 +55,18 @@ public class CourseController {
                     announcement, filesModels, linksModels
             ));
         }
+
+        announcementResponseModels.sort(new Comparator<CourseAnnouncementResponseModel>() {
+            @Override
+            public int compare(CourseAnnouncementResponseModel o1, CourseAnnouncementResponseModel o2) {
+                LocalDateTime ld1 = o1.getAnnouncement().getTime();
+                LocalDateTime ld2 = o2.getAnnouncement().getTime();
+
+                if(ld1.isBefore(ld2))   return 1;
+                if(ld1.isAfter(ld2))    return -1;
+                return 0;
+            }
+        });
 
         return new CourseResponseModel(courseModel, announcementResponseModels);
     }
