@@ -12,5 +12,8 @@ public interface TimeTableRepository extends JpaRepository<TimeTableModel, Long>
     List<TimeTableModel> findAllByCourseModel(CourseModel courseModel);
     List<TimeTableModel> findAllByCourseModelAndType(CourseModel courseModel, char type);
     Optional<TimeTableModel> findByCourseModelAndDayAndHour(CourseModel courseModel, DayOfWeek day, int hour);
-    List<TimeTableModel> findAllByCourseModelAndDayAndHourGreaterThanEqual(CourseModel courseModel, DayOfWeek day, int hour);
+    List<TimeTableModel> findAllByCourseModelAndDayAndHourGreaterThanEqual(
+        CourseModel courseModel, DayOfWeek day, int hour
+    );
+    List<TimeTableModel> findAllByCourseModelAndDay(CourseModel courseModel, DayOfWeek day);
 }

@@ -53,6 +53,20 @@ public class TimeTableController {
         return timeTables;
     }
 
+    @RequestMapping(value = "/today", method = RequestMethod.GET)
+    public @ResponseBody List<TimeTableModel> getTodaySchedule(Principal principal) {
+        List<CourseModel> courses = getCourses(principal.getName());
+
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DayOfWeek day = localDateTime.getDayOfWeek();
+
+        List<TimeTableModel> upcoming = new ArrayList<>();
+        for(CourseModel course: courses) {
+            upcoming.addAll(timeTableRepository.findAllByCourseModelAndDay(course, day));
+        }
+        return upcoming;
+    }
+
     @RequestMapping(value = "/next", method = RequestMethod.GET)
     public @ResponseBody List<TimeTableModel> getNextSchedule(Principal principal) {
         List<CourseModel> courses = getCourses(principal.getName());
