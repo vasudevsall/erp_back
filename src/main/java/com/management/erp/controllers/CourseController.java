@@ -8,10 +8,7 @@ import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -35,6 +32,8 @@ public class CourseController {
     private AttendanceRepository attendanceRepository;
     @Autowired
     private TimeTableRepository timeTableRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public @ResponseBody CourseResponseModel getCourseAnnouncements(
@@ -50,9 +49,22 @@ public class CourseController {
         for(CourseAnnouncementModel announcement: courseAnnouncementModels) {
             List<FilesModel> filesModels = filesRepository.findAllByAnnouncement(announcement);
             List<LinksModel> linksModels = linksRepository.findAllByAnnouncement(announcement);
+            List<CommentsModel> commentsModels = commentsRepository.findAllByAnnouncement(announcement);
+
+            commentsModels.sort(new Comparator<CommentsModel>() {
+                @Override
+                public int compare(CommentsModel o1, CommentsModel o2) {
+                    LocalDateTime ld1 = o1.getTime();
+                    LocalDateTime ld2 = o2.getTime();
+
+                    if(ld1.isBefore(ld2))   return -1;
+                    if(ld1.isAfter(ld2))    return 1;
+                    return 0;
+                }
+            });
 
             announcementResponseModels.add(new CourseAnnouncementResponseModel(
-                    announcement, filesModels, linksModels
+                    announcement, filesModels, linksModels, commentsModels
             ));
         }
 
@@ -69,6 +81,15 @@ public class CourseController {
         });
 
         return new CourseResponseModel(courseModel, announcementResponseModels);
+    }
+
+    @RequestMapping(value = "/{id}/comments", method = RequestMethod.POST)
+    public @ResponseBody CourseAnnouncementResponseModel postComment(
+        @RequestBody CommentsModel comment, @PathVariable String id
+    ) {
+        long announceId = comment.getAnnouncement().getId();
+        //TODO: Complete comments
+        return null;
     }
 
     @RequestMapping(value = "/{id}/students", method = RequestMethod.GET)
@@ -92,7 +113,9 @@ public class CourseController {
             for(TimeTableModel schedule: timeTables) {
                 List<Object[]> sessions = attendanceRepository.getSessionListByTimeTable(schedule);
                 for(Object[] session: sessions)
-                    sessionList.add(session[0].toString());
+                    sessionList.add(
+                        session[0].toString() + " "+ schedule.getHour() + ":" + schedule.getMinute()
+                    );
             }
 
             sessionMap.put(type, sessionList);

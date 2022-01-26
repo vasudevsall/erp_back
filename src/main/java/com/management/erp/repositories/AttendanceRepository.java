@@ -12,13 +12,13 @@ import java.util.Optional;
 
 public interface AttendanceRepository extends JpaRepository<AttendanceModel, Long> {
     List<AttendanceModel> findAllByStudentModelAndTimetable(
-            StudentModel studentModel, TimeTableModel timeTableModel
+        StudentModel studentModel, TimeTableModel timeTableModel
     );
     List<AttendanceModel> findAllByStudentModelAndTimetableAndPresent(
-            StudentModel studentModel, TimeTableModel timeTableModel, boolean present
+        StudentModel studentModel, TimeTableModel timeTableModel, boolean present
     );
     Optional<AttendanceModel> findAttendanceModelByStudentModelAndDateAndTimetable(
-            StudentModel studentModel, LocalDate localDate, TimeTableModel timeTableModel
+        StudentModel studentModel, LocalDate localDate, TimeTableModel timeTableModel
     );
     List<AttendanceModel> findAllByDateAndTimetable(LocalDate date, TimeTableModel timeTableModel);
 

@@ -1,10 +1,8 @@
 package com.management.erp.controllers.faculty;
 
-import com.management.erp.models.repository.CourseAnnouncementModel;
-import com.management.erp.models.repository.CourseModel;
-import com.management.erp.models.repository.FilesModel;
-import com.management.erp.models.repository.LinksModel;
+import com.management.erp.models.repository.*;
 import com.management.erp.models.response.CourseAnnouncementResponseModel;
+import com.management.erp.repositories.CommentsRepository;
 import com.management.erp.repositories.CourseAnnouncementRepository;
 import com.management.erp.repositories.FilesRepository;
 import com.management.erp.repositories.LinksRepository;
@@ -15,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +23,15 @@ public class FacultyCourseController {
 
     @Autowired
     private FindCourseService findCourseService;
+
     @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
     @Autowired
     private FilesRepository filesRepository;
     @Autowired
     private LinksRepository linksRepository;
+    @Autowired
+    private CommentsRepository commentsRepository;
 
     @RequestMapping(value = "/{id}/announcement", method = RequestMethod.POST)
     public @ResponseBody CourseAnnouncementResponseModel postAnnouncement(
@@ -59,7 +61,8 @@ public class FacultyCourseController {
         return new CourseAnnouncementResponseModel(
                 announcement,
                 filesRepository.findAllByAnnouncement(announcement),
-                linksRepository.findAllByAnnouncement(announcement)
+                linksRepository.findAllByAnnouncement(announcement),
+                new ArrayList<>()
         );
     }
 
@@ -76,11 +79,15 @@ public class FacultyCourseController {
 
         List<FilesModel> files = filesRepository.findAllByAnnouncement(announcementModel);
         List<LinksModel> links = linksRepository.findAllByAnnouncement(announcementModel);
+        List<CommentsModel> comments = commentsRepository.findAllByAnnouncement(announcementModel);
 
         filesRepository.deleteAll(files);
         linksRepository.deleteAll(links);
+        commentsRepository.deleteAll(comments);
         courseAnnouncementRepository.delete(announcementModel);
 
-        return new CourseAnnouncementResponseModel(announcementModel, files, links);
+        return new CourseAnnouncementResponseModel(
+            announcementModel, files, links, comments
+        );
     }
 }
