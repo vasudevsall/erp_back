@@ -70,11 +70,17 @@ public class FacultyAttendanceController {
     // Get all attendance for a day of a course
     @RequestMapping(value = "/{id}/attendance", method = RequestMethod.GET)
     public @ResponseBody AttendanceResponse getAllAttendance(
-        @PathVariable String id, @RequestBody AttendanceResponse attendanceResponse
+        @PathVariable String id,
+        @RequestParam(name = "date") String localDate,
+        @RequestParam int hours
     ) {
         CourseModel courseModel = findCourseService.findCourse(id);
+        LocalDate date = LocalDate.parse(localDate);
 
-        LocalDate date = attendanceResponse.getDate();
+        AttendanceResponse attendanceResponse = new AttendanceResponse(
+            date, hours, 0, null
+        );
+
         TimeTableModel schedule = getSchedule(courseModel, attendanceResponse);
 
         List<AttendanceModel> attendances = attendanceRepository.findAllByDateAndTimetable(date, schedule);
@@ -85,6 +91,7 @@ public class FacultyAttendanceController {
         }
 
         attendanceResponse.setStudents(studentAttendance);
+        attendanceResponse.setMinutes(schedule.getMinute());
 
         return attendanceResponse;
     }

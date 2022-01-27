@@ -7,9 +7,12 @@ import com.management.erp.repositories.*;
 import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -84,12 +87,34 @@ public class CourseController {
     }
 
     @RequestMapping(value = "/{id}/comments", method = RequestMethod.POST)
-    public @ResponseBody CourseAnnouncementResponseModel postComment(
+    public @ResponseBody CommentsModel postComment(
         @RequestBody CommentsModel comment, @PathVariable String id
     ) {
         long announceId = comment.getAnnouncement().getId();
-        //TODO: Complete comments
-        return null;
+        Optional<CourseAnnouncementModel> announcementOptional =
+                courseAnnouncementRepository.findById(announceId);
+        if(announcementOptional.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Announcement not found");
+
+        CourseAnnouncementModel announcement = announcementOptional.get();
+        comment.setAnnouncement(announcement);
+
+        commentsRepository.save(comment);
+        comment.setTime(LocalDateTime.now());
+
+        return comment;
+    }
+
+    @RequestMapping(value = "/{id}/comments", method = RequestMethod.DELETE)
+    public @ResponseBody CommentsModel deleteComment(
+        @PathVariable String id, @RequestParam(name = "id") long commentId
+    ) {
+        Optional<CommentsModel> optionalComment = commentsRepository.findById(commentId);
+        if(optionalComment.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found");
+        CommentsModel comment = optionalComment.get();
+        commentsRepository.delete(comment);
+        return comment;
     }
 
     @RequestMapping(value = "/{id}/students", method = RequestMethod.GET)
