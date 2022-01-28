@@ -1,4 +1,4 @@
-package com.management.erp.models.response;
+package com.management.erp.models.custom;
 
 import com.management.erp.models.repository.AttendanceModel;
 

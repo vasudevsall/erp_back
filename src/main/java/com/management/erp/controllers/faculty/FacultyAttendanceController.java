@@ -4,7 +4,7 @@ import com.management.erp.models.repository.AttendanceModel;
 import com.management.erp.models.repository.CourseModel;
 import com.management.erp.models.repository.StudentModel;
 import com.management.erp.models.repository.TimeTableModel;
-import com.management.erp.models.response.AttendanceResponse;
+import com.management.erp.models.custom.AttendanceResponse;
 import com.management.erp.repositories.AttendanceRepository;
 import com.management.erp.repositories.TimeTableRepository;
 import com.management.erp.services.CourseStudentService;

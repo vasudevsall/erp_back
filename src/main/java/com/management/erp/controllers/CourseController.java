@@ -1,8 +1,8 @@
 package com.management.erp.controllers;
 
 import com.management.erp.models.repository.*;
-import com.management.erp.models.response.CourseAnnouncementResponseModel;
-import com.management.erp.models.response.CourseResponseModel;
+import com.management.erp.models.custom.CourseAnnouncementResponseModel;
+import com.management.erp.models.custom.CourseResponseModel;
 import com.management.erp.repositories.*;
 import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 

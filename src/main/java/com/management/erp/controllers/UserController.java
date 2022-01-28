@@ -3,6 +3,7 @@ package com.management.erp.controllers;
 import com.management.erp.models.repository.UserModel;
 import com.management.erp.repositories.UserRepository;
 import com.management.erp.services.FindUserService;
+import com.management.erp.utils.UserValidationUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,15 +42,17 @@ public class UserController {
     ) {
         UserModel user = findUserService.findUserByEmail(principal.getName());
 
+        UserValidationUtil userValidationUtil = new UserValidationUtil();
+
         String password = userModel.getPassword();
         if(password != null && !password.equals("")) {
-            passwordValidation(password);
+            userValidationUtil.passwordValidation(password);
             user.setPassword(passwordEncoder.encode(password));
         }
 
         String phone = userModel.getPhone();
         if(phone != null && !phone.equals("")) {
-            phoneNumberValidation(phone);
+            userValidationUtil.phoneNumberValidation(phone);
             user.setPhone(phone);
         }
 
@@ -65,26 +68,5 @@ public class UserController {
         }
 
         return user;
-    }
-
-    // Helper Methods
-    public void passwordValidation(String password) {
-        if(password.length() < 6) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must be at least 6 characters long");
-        }
-        if(!password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&+=])(?=\\S+$).{6,}$")) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password must contain at lest one number and a special character and no spaces");
-        }
-    }
-
-    public void phoneNumberValidation(String phone) {
-        if(phone.length() != 10) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone Number must have 10 digits");
-        }
-        try {
-            long phoneNum = Long.parseLong(phone);
-        } catch (NumberFormatException e){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Phone number can contain only digits");
-        }
     }
 }

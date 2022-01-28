@@ -1,7 +1,7 @@
 package com.management.erp.controllers.faculty;
 
 import com.management.erp.models.repository.*;
-import com.management.erp.models.response.CourseAnnouncementResponseModel;
+import com.management.erp.models.custom.CourseAnnouncementResponseModel;
 import com.management.erp.repositories.CommentsRepository;
 import com.management.erp.repositories.CourseAnnouncementRepository;
 import com.management.erp.repositories.FilesRepository;

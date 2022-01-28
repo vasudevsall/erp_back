@@ -1,7 +1,7 @@
 package com.management.erp.controllers.student;
 
 import com.management.erp.models.repository.*;
-import com.management.erp.models.response.StudentAttendanceListModel;
+import com.management.erp.models.custom.StudentAttendanceListModel;
 import com.management.erp.repositories.AttendanceRepository;
 import com.management.erp.repositories.TimeTableRepository;
 import com.management.erp.services.FindCourseService;
