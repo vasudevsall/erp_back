@@ -6,12 +6,14 @@ import com.management.erp.models.response.CourseResponseModel;
 import com.management.erp.repositories.*;
 import com.management.erp.services.CourseStudentService;
 import com.management.erp.services.FindCourseService;
+import com.management.erp.services.FindUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -24,6 +26,8 @@ public class CourseController {
     private FindCourseService findCourseService;
     @Autowired
     private CourseStudentService courseStudentService;
+    @Autowired
+    private FindUserService findUserService;
 
     @Autowired
     private CourseAnnouncementRepository courseAnnouncementRepository;
@@ -88,8 +92,10 @@ public class CourseController {
 
     @RequestMapping(value = "/{id}/comments", method = RequestMethod.POST)
     public @ResponseBody CommentsModel postComment(
-        @RequestBody CommentsModel comment, @PathVariable String id
+        @RequestBody CommentsModel comment, @PathVariable String id,
+        Principal principal
     ) {
+        UserModel user = findUserService.findUserByEmail(principal.getName());
         long announceId = comment.getAnnouncement().getId();
         Optional<CourseAnnouncementModel> announcementOptional =
                 courseAnnouncementRepository.findById(announceId);
@@ -98,6 +104,7 @@ public class CourseController {
 
         CourseAnnouncementModel announcement = announcementOptional.get();
         comment.setAnnouncement(announcement);
+        comment.setUser(user);
 
         commentsRepository.save(comment);
         comment.setTime(LocalDateTime.now());

@@ -18,11 +18,20 @@ public class CommentsModel {
     @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private CourseAnnouncementModel announcement;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
+    private UserModel user;
+
     private String comment;
     private LocalDateTime time;
 
-    public CommentsModel(CourseAnnouncementModel announcement, String comment, LocalDateTime time) {
+    public CommentsModel(
+        CourseAnnouncementModel announcement, UserModel user,
+        String comment, LocalDateTime time
+    ) {
         this.announcement = announcement;
+        this.user = user;
         this.comment = comment;
         this.time = time;
     }
@@ -35,6 +44,14 @@ public class CommentsModel {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public UserModel getUser() {
+        return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 
     public CourseAnnouncementModel getAnnouncement() {
