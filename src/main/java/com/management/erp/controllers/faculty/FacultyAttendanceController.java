@@ -87,7 +87,15 @@ public class FacultyAttendanceController {
 
         Map<String, Boolean> studentAttendance = new HashMap<>();
         for(AttendanceModel attendance: attendances) {
-            studentAttendance.put(attendance.getStudentModel().getId(), attendance.isPresent());
+            studentAttendance.put(
+                attendance.getStudentModel().getId() +
+                        " " +
+                        attendance.getStudentModel().getUserId().getFirstName()+
+                        " " +
+                        attendance.getStudentModel().getUserId().getLastName()
+                    ,
+                attendance.isPresent()
+            );
         }
 
         attendanceResponse.setStudents(studentAttendance);
