@@ -60,7 +60,6 @@ public class AssignmentSubmitModel {
         this.student = student;
     }
 
-    @JsonIgnore
     public AssignmentModel getAssignment() {
         return assignment;
     }
