@@ -88,6 +88,8 @@ public class StudentAssignmentController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid File");
 
         submit.setFile(newFile);
+        submit.setMarks(0);
+        submit.setMarked(false);
         return assignmentSubmitRepository.save(submit);
     }
 
