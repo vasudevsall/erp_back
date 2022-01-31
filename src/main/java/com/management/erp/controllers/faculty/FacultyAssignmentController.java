@@ -88,6 +88,10 @@ public class FacultyAssignmentController {
         if(assignmentOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Assignment not found");
         AssignmentModel assignment = assignmentOptional.get();
+
+        List<AssignmentSubmitModel> submissions =
+                assignmentSubmitRepository.findAllByAssignment(assignment);
+        assignmentSubmitRepository.deleteAll(submissions);
         assignmentRepository.delete(assignment);
         return assignment;
     }
