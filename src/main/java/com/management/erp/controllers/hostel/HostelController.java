@@ -133,6 +133,22 @@ public class HostelController {
         return passes;
     }
 
+    @RequestMapping(value = "faculty/pass/search", method = RequestMethod.GET)
+    public @ResponseBody List<GatePassModel> searchHostelGatePass(
+            Principal principal, @RequestParam String entry, @RequestParam String history
+    ) {
+        StudentModel student = findStudentService.findStudentModelById(entry);
+
+        Optional<HostelRegModel> hostelRegModel = hostelRegRepository.findByStudent(student);
+        if(hostelRegModel.isEmpty())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not enrolled in hostel");
+
+        HostelRegModel hostelReg = hostelRegModel.get();
+        if (history.toLowerCase().equals("true"))
+            return gatePassRepository.findAllByHostelRegAndSignedOnIsNotNull(hostelReg);
+        return gatePassRepository.findAllByHostelRegAndSignedOnIsNull(hostelReg);
+    }
+
     @RequestMapping(value = "/faculty/pass/{passId}", method = RequestMethod.PUT)
     public @ResponseBody GatePassModel signGatePass(@PathVariable("passId") long id, @RequestParam String allowed) {
         Optional<GatePassModel> gatePassOptional = gatePassRepository.findById(id);
@@ -141,8 +157,7 @@ public class HostelController {
 
         GatePassModel gatePass = gatePassOptional.get();
         gatePass.setPermission(allowed.equals("true"));
-        FacultyModel faculty = findFacultyService.findFacultyModelById("WARD789");
-        gatePass.setSignedBy(faculty);
+        gatePass.setSignedBy(gatePass.getHostelReg().getRoom().getHostel().getWarden());
         gatePass.setSignedOn(LocalDateTime.now());
         return gatePassRepository.save(gatePass);
     }

@@ -12,5 +12,6 @@ public interface GatePassRepository extends JpaRepository<GatePassModel, Long> {
     List<GatePassModel> findAllByHostelRegAndDateGreaterThanEqual(HostelRegModel hostelRegModel, LocalDate date);
     List<GatePassModel> findAllByHostelRegAndPermission(HostelRegModel hostelRegModel, boolean permission);
     List<GatePassModel> findAllByHostelRegAndSignedOnIsNull(HostelRegModel hostelRegModel);
+    List<GatePassModel> findAllByHostelRegAndSignedOnIsNotNull(HostelRegModel hostelRegModel);
     List<GatePassModel> findAllByDate(LocalDate date);
 }
