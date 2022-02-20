@@ -153,8 +153,8 @@ public class CourseController {
             sessionList.sort(new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {
-                    LocalDate d1 = LocalDate.parse(o1);
-                    LocalDate d2 = LocalDate.parse(o2);
+                    LocalDate d1 = LocalDate.parse(o1.substring(0, 11));
+                    LocalDate d2 = LocalDate.parse(o2.substring(0, 11));
                     return d1.compareTo(d2) * -1;
                 }
             });
