@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -148,6 +149,15 @@ public class CourseController {
                         session[0].toString() + " "+ schedule.getHour() + ":" + schedule.getMinute()
                     );
             }
+
+            sessionList.sort(new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    LocalDate d1 = LocalDate.parse(o1);
+                    LocalDate d2 = LocalDate.parse(o2);
+                    return d1.compareTo(d2) * -1;
+                }
+            });
 
             sessionMap.put(type, sessionList);
         }

@@ -131,13 +131,13 @@ public class HostelController {
     }
 
     @RequestMapping(value = "/faculty/pass/{passId}", method = RequestMethod.PUT)
-    public @ResponseBody GatePassModel signGatePass(@PathVariable("passId") long id) {
+    public @ResponseBody GatePassModel signGatePass(@PathVariable("passId") long id, @RequestParam String allowed) {
         Optional<GatePassModel> gatePassOptional = gatePassRepository.findById(id);
         if(gatePassOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Gate Pass not found");
 
         GatePassModel gatePass = gatePassOptional.get();
-        gatePass.setPermission(true);
+        gatePass.setPermission(allowed.equals("true"));
         FacultyModel faculty = findFacultyService.findFacultyModelById("WARD789");
         gatePass.setSignedBy(faculty);
         gatePass.setSignedOn(LocalDateTime.now());
