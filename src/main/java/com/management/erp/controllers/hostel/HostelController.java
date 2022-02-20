@@ -42,17 +42,19 @@ public class HostelController {
         return hostelRepository.findAll();
     }
 
-    @RequestMapping(value = "/{hostelId}/rooms", method = RequestMethod.GET)
-    public @ResponseBody List<HostelRoomModel> getAllRooms(@PathVariable("hostelId") long id) {
-        Optional<HostelModel> hostelModelOptional = hostelRepository.findById(id);
+    @RequestMapping(value = "/rooms", method = RequestMethod.GET)
+    public @ResponseBody List<HostelRoomModel> getAllRooms(Principal principal) {
+        FacultyModel faculty = findFacultyService.findFacultyModelByEmail(principal.getName());
+        Optional<HostelModel> hostelModelOptional = hostelRepository.findByWarden(faculty);
         if(hostelModelOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hostel not found");
         return hostelRoomRepository.findAllByHostel(hostelModelOptional.get());
     }
 
-    @RequestMapping(value = "/{hostelId}/students", method = RequestMethod.GET)
-    public @ResponseBody List<HostelRegModel> getAllStudents(@PathVariable("hostelId") long id) {
-        Optional<HostelModel> hostelModelOptional = hostelRepository.findById(id);
+    @RequestMapping(value = "/students", method = RequestMethod.GET)
+    public @ResponseBody List<HostelRegModel> getAllStudents(Principal principal) {
+        FacultyModel faculty = findFacultyService.findFacultyModelByEmail(principal.getName());
+        Optional<HostelModel> hostelModelOptional = hostelRepository.findByWarden(faculty);
         if(hostelModelOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hostel not found");
 
@@ -110,9 +112,10 @@ public class HostelController {
         return gatePassRepository.save(gatePassModel);
     }
 
-    @RequestMapping(value = "/faculty/{hostelId}/pass", method = RequestMethod.GET)
-    public @ResponseBody List<GatePassModel> getHostelGatePasses(@PathVariable("hostelId") long id) {
-        Optional<HostelModel> hostelModelOptional = hostelRepository.findById(id);
+    @RequestMapping(value = "/faculty/pass", method = RequestMethod.GET)
+    public @ResponseBody List<GatePassModel> getHostelGatePasses(Principal principal) {
+        FacultyModel faculty = findFacultyService.findFacultyModelByEmail(principal.getName());
+        Optional<HostelModel> hostelModelOptional = hostelRepository.findByWarden(faculty);
         if(hostelModelOptional.isEmpty())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Hostel not found");
 
