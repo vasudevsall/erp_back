@@ -69,7 +69,7 @@ public class StudentGrievanceController {
         GrievanceModel grievanceModel = grievance.getGrievance();
         grievanceModel.setStudent(student);
         grievanceModel.setDatetime(LocalDateTime.now());
-        grievanceModel.setForwardedTo(null);
+//        grievanceModel.setForwardedTo(null);
         grievanceModel.setStatus(GrievanceStatus.NOT_READ);
         GrievanceModel model = grievanceRepository.save(grievanceModel);
 
