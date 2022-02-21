@@ -12,6 +12,7 @@ import com.management.erp.utils.GrievanceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,12 +63,10 @@ public class StudentGrievanceController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public @ResponseBody GrievanceResponseModel postNewGrievance(GrievanceResponseModel grievance, Principal principal) {
+    public @ResponseBody GrievanceResponseModel postNewGrievance(@RequestBody GrievanceResponseModel grievance, Principal principal) {
         StudentModel student = findStudentService.findStudentModelByEmail(principal.getName());
-        System.out.println(student.getId());
 
         GrievanceModel grievanceModel = grievance.getGrievance();
-        System.out.println(grievanceModel.getDepartment());
         grievanceModel.setStudent(student);
         grievanceModel.setDatetime(LocalDateTime.now());
         grievanceModel.setForwardedTo(null);
@@ -90,7 +89,7 @@ public class StudentGrievanceController {
 
     @RequestMapping(value = "reply", method = RequestMethod.POST)
     public @ResponseBody GrievanceReplyResponseModel postGrievanceReply(
-            Principal principal, GrievanceReplyResponseModel replyResponseModel
+            Principal principal, @RequestBody GrievanceReplyResponseModel replyResponseModel
     ) {
         UserModel user = findUserService.findUserByEmail(principal.getName());
 
