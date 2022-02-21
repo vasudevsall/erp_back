@@ -64,6 +64,7 @@ public class StudentGrievanceController {
     @RequestMapping(method = RequestMethod.POST)
     public @ResponseBody GrievanceResponseModel postNewGrievance(GrievanceResponseModel grievance, Principal principal) {
         StudentModel student = findStudentService.findStudentModelByEmail(principal.getName());
+        System.out.println(student.getId());
 
         GrievanceModel grievanceModel = grievance.getGrievance();
         grievanceModel.setStudent(student);
