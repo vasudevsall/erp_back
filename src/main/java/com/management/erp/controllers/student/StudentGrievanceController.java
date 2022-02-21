@@ -67,9 +67,10 @@ public class StudentGrievanceController {
         System.out.println(student.getId());
 
         GrievanceModel grievanceModel = grievance.getGrievance();
+        System.out.println(grievanceModel.getDepartment());
         grievanceModel.setStudent(student);
         grievanceModel.setDatetime(LocalDateTime.now());
-//        grievanceModel.setForwardedTo(null);
+        grievanceModel.setForwardedTo(null);
         grievanceModel.setStatus(GrievanceStatus.NOT_READ);
         GrievanceModel model = grievanceRepository.save(grievanceModel);
 
